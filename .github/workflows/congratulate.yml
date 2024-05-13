@@ -9,17 +9,6 @@ on:
     types: [closed]
 permissions:
   pull-requests: write
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-  # on:
-#   pull_request:
-#     types: [closed]
-
-# permissions:
-#   pull-requests: write
-
 jobs:
   congratulate:
     if: github.event.pull_request.merged == true
@@ -77,7 +66,7 @@ jobs:
                   });
 
                 let stats;
-                const isFirstPR = true;
+                const isFirstPR = pullRequests.length === 1;
                 console.log(isFirstPR);
 
                 if (!isFirstPR) {
