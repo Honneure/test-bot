@@ -59,7 +59,7 @@ jobs:
 
                 const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
                   q: `is:pr author:${userName} is:closed`,
-                  per_page: 2,
+                  per_page: 50,
                   page: 1,
                   });
 
