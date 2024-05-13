@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # - name: Install dependencies
-      #   uses: ./.github/workflows/actions/yarn-install
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/yarn-install
       - name: Utils / Run Danger.js
         run: npx run danger:ci
         env:
