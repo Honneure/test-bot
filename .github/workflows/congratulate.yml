@@ -93,7 +93,7 @@ jobs:
                             `[See contributor page](${contributorUrl}) - ` +
                             `[Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=${contributorUrl}) - ` +
                             `[Share on Twitter](https://www.twitter.com/share?url=${contributorUrl})`
-                            `![Contributions](https://twenty.ngrok.app/api/contributors/og-image/${username})`
+                            `![Contributions](https://twenty.ngrok.app/api/contributors/og-image/${userName})`
                 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
