@@ -1,3 +1,3 @@
 # test-bot
 
-Hello world !o
+Hello world !
