@@ -65,9 +65,11 @@ jobs:
                   per_page: 2
                   });
 
+                console.log(pullRequests);
                 let stats;
                 const isFirstPR = pullRequests.length === 1;
                 console.log(isFirstPR);
+                console.log(pullRequests.length);
                 console.log(userName);
 
                 if (!isFirstPR) {
