@@ -59,15 +59,14 @@ jobs:
 
                 const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
                   q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
-                  per_page: 50,
+                  per_page: 2,
                   page: 1,
                   });
 
-                console.log(pullRequests);
+                console.log(pullRequests.total_count);
                 let stats;
-                const isFirstPR = pullRequests.length === 1;
+                const isFirstPR = pullRequests.total_count === 1;
                 console.log(isFirstPR);
-                console.log(pullRequests.length);
                 console.log(userName);
 
                 if (!isFirstPR) {
