@@ -24,20 +24,11 @@ jobs:
             const pullRequest = context.payload.pull_request;
             const userName = pullRequest.user.login;
 
-            function ordinalSuffix(number) {
-              const j = number % 10,
-                    k = number % 100;
-              if (j == 1 && k != 11) {
-                return number + "st";
-              }
-              if (j == 2 && k != 12) {
-                return number + "nd";
-              }
-              if (j == 3 && k != 13) {
-                return number + "rd";
-              }
-              return number + "th";
-              }
+            const ordinalSuffix = (number) => {
+              const suffixes = { 1: 'st', 2: 'nd', 3: 'rd' };
+              const v = number % 100;
+              return number + (suffixes[v % 10] || 'th');
+            };
 
             async function fetchContributorStats(username) {
               const apiUrl = `https://twenty.ngrok.app/api/contributors/contributorStats/${username}`;
@@ -45,7 +36,6 @@ jobs:
               try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
-                
                 return data;
               } catch (error) {
                 console.error('Error fetching contributor stats:', error);
@@ -66,7 +56,6 @@ jobs:
 
             async function run() {
               try {
-               
                 const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
                   q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
                   per_page: 2,
@@ -83,11 +72,8 @@ jobs:
                 }
 
                 const contributorUrl = `https://twenty.com/contributors/${userName}`;
-
                 const imageUrl = await fetchContributorImage(userName);
-
                 const message = `Thanks @${userName} for your contribution!\n` +
-
                             `This marks your **${ordinalSuffix(stats.mergedPRsCount)}** PR on the repo. ` +
                             `You're **top ${stats.rank}%** of all our contributors 🎉\n` +
                             `[See contributor page](${contributorUrl}) - ` +
