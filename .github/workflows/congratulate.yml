@@ -55,14 +55,17 @@ jobs:
 
             async function run() {
               try {
-                const { data: pullRequests } = await github.rest.pulls.list({
+               
+
+                const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
+                  q: `is:pr author:${userName} is:closed`
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   creator: userName,
-                  state: 'all',
                   sort: 'created',
                   direction: 'desc',
                   per_page: 2
+                  page: 1,
                   });
 
                 console.log(pullRequests);
