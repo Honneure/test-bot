@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install dependencies
         uses: ./.github/workflows/actions/yarn-install
-      - name: Utils / Run Danger.js
+      - name: Utils 2 / Run Danger.js
         run: pwd && npm run danger:ci
         env:
           DANGER_GITHUB_API_TOKEN: ${{ github.token }}

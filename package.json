@@ -4,8 +4,14 @@
   "scripts": {
     "danger:ci": "danger ci --use-github-checks --failOnErrors"
   },
+  "engines": {
+    "npm": "please-use-yarn"
+  },
+  "license": "AGPL-3.0",
   "dependencies": {
-    "danger-plugin-todos": "^1.3.1",
-    "danger": "^11.3.0"
+    "danger-plugin-todos": "^1.3.1"
+  },
+  "devDependencies": {
+    "danger": "^12.2.0"
   }
 }
