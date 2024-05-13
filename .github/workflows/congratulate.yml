@@ -57,11 +57,17 @@ jobs:
               try {
                
 
+                # const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
+                #   q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
+                #   per_page: 2,
+                #   page: 1,
+                #   });
+
                 const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
-                  q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
+                  q: `is:pr author:lalo is:closed repo:ady-beraud/test-bot`,
                   per_page: 2,
                   page: 1,
-                  });
+                    });
 
                 console.log(pullRequests.total_count);
                 let stats;
