@@ -53,21 +53,31 @@ jobs:
               }
             }
 
+            async function fetchContributorImage(username) {
+              const apiUrl = `https://twenty.ngrok.app/api/contributors/og-image/${username}`;
+             
+              try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                return data;
+              } catch (error) {
+                console.error('Error fetching contributor image:', error);
+                throw error;
+              }
+            }
+
             async function run() {
               try {
                
-
                 const { data: pullRequests } = await github.rest.search.issuesAndPullRequests({
-                  q: `is:pr author:lalo is:closed repo:ady-beraud/test-bot`,
+                  q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
                   per_page: 2,
                   page: 1,
-                    });
-
-                console.log(pullRequests.total_count);
+                  });
+                
                 let stats;
                 const isFirstPR = pullRequests.total_count === 1;
-                console.log(isFirstPR);
-                console.log(userName);
 
                 if (!isFirstPR) {
                   stats = await fetchContributorStats(userName);
@@ -77,6 +87,8 @@ jobs:
 
                 const contributorUrl = `https://twenty.com/contributors/${userName}`;
 
+                const imageUrl = await fetchContributorImage(userName);
+
                 const message = `Thanks @${userName} for your contribution!\n` +
 
                             `This marks your **${ordinalSuffix(stats.mergedPRsCount + 1)}** PR on the repo. ` +
@@ -84,6 +96,7 @@ jobs:
                             `[See contributor page](${contributorUrl}) - ` +
                             `[Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=${contributorUrl}) - ` +
                             `[Share on Twitter](https://www.twitter.com/share?url=${contributorUrl})`
+                            `![Contributions](https://twenty.ngrok.app/api/contributors/og-image/${username})`
                 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
