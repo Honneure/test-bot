@@ -48,5 +48,9 @@ By submitting your Pull Request, you acknowledge that you agree with the terms o
   );
 }
 
+if (danger.github && danger.github.pr.merged) {
+  console.log("c'est moi le bebou dibou");
+}
+
 // TODOS / Fixme
 schedule(todos());
