@@ -49,7 +49,88 @@ By submitting your Pull Request, you acknowledge that you agree with the terms o
 }
 
 if (danger.github && danger.github.pr.merged) {
-  console.log("c'est moi le bebou dibou");
+  const pullRequest = danger.github.pr;
+  const userName = pullRequest.user.login;
+
+  const ordinalSuffix = (number) => {
+    const v = number % 100;
+    if (v === 11 || v === 12 || v === 13) {
+      return number + "th";
+    }
+    const suffixes = { 1: "st", 2: "nd", 3: "rd" };
+    return number + (suffixes[v % 10] || "th");
+  };
+
+  async function fetchContributorStats(username) {
+    const apiUrl = `https://twenty.ngrok.app/api/contributors/contributorStats/${username}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching contributor stats:", error);
+      throw error;
+    }
+  }
+
+  async function fetchContributorImage(username) {
+    const apiUrl = `https://twenty.ngrok.app/api/contributors/${username}/og.png`;
+
+    try {
+      const response = await fetch(apiUrl);
+    } catch (error) {
+      console.error("Error fetching contributor image:", error);
+      throw error;
+    }
+  }
+
+  async function run() {
+    try {
+      const { data: pullRequests } =
+        await danger.github.api.rest.search.issuesAndPullRequests({
+          q: `is:pr author:${userName} is:closed repo:ady-beraud/test-bot`,
+          per_page: 2,
+          page: 1,
+        });
+
+      let stats;
+      const isFirstPR = pullRequests.total_count === 1;
+
+      if (!isFirstPR) {
+        stats = await fetchContributorStats(userName);
+      } else {
+        stats = { mergedPRsCount: 1, rank: 52 };
+      }
+
+      const contributorUrl = `https://twenty.com/contributors/${userName}`;
+
+      // Pre-fetch to trigger cloudflare cache
+      await fetchContributorImage(userName);
+
+      const message =
+        `Thanks @${userName} for your contribution!\n` +
+        `This marks your **${ordinalSuffix(
+          stats.mergedPRsCount
+        )}** PR on the repo. ` +
+        `You're **top ${stats.rank}%** of all our contributors 🎉\n` +
+        `[See contributor page](${contributorUrl}) - ` +
+        `[Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=${contributorUrl}) - ` +
+        `[Share on Twitter](https://www.twitter.com/share?url=${contributorUrl})\n\n` +
+        `![Contributions](https://twenty.ngrok.app/api/contributors/${userName}/og.png)`;
+
+      await danger.github.api.rest.issues.createComment({
+        owner: danger.github.thisPR.owner,
+        repo: danger.github.thisPR.repo,
+        issue_number: danger.github.thisPR.pull_number,
+        body: message,
+      });
+    } catch (error) {
+      console.error("Failed to handle PR merge:", error);
+    }
+  }
+
+  run();
 }
 
 // TODOS / Fixme
